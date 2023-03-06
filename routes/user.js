@@ -1,31 +1,24 @@
 const express = require("express");
-const userRouter =express.Router();
-const users = [
-  {
-    username:"rakam",
-    password:"12345"
-  },
-  {
-    username:'gitesh',
-    password:'12345'
-  }
-]
+const Users = require('../database')
+const userRouter = express.Router();
 
-userRouter.get('/user',(req,res)=>{
-  res.json({"name":"gitesh"}).status(200);
+userRouter.get('/', (req, res) => {
+  res.json({
+    "success": true
+  }).status(200);
 });
 
-
-userRouter.get('/login',(req,res)=>{
-  const {username,password}=req.body
-  const selectedUser = users.find((user)=>
-    user.username === "rakam"
-
-  )
-  console.log(selectedUser);
+userRouter.post('/login', async (req, res) => {
+  const { username, password } = req.body
+  const user = await Users.findOne({ username })
+  res.json(user).status(200)
 });
-userRouter.get('/register',(req,res)=>{
-  console.log("login");
+
+userRouter.post('/register', async (req, res) => {
+  const { username, password } = req.body
+  const user = await Users.create({ username, password })
+
+  res.json().status(200)
 });
 
 module.exports= userRouter
