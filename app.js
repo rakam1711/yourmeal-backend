@@ -10,9 +10,9 @@ const app = express();
 
 app.use(express.static("public"));
 app.set('view engine','ejs');
-app.use(express.urlencoded({ extended: true }));
- //mongodb+srv://razor:nIddeiqZKJ0iONuc@cluster0.naofr.mongodb.net/?retryWrites=true&w=majority
-const DATABASE_URL = process.env.DATABASE_URL || "mongodb://localhost:27017/test"
+app.use(express.urlencoded({ extended: true }))
+
+const DATABASE_URL = process.env.DATABASE_URL || "mongodb://localhost:27017/test/"
 
 mongoose.connect(DATABASE_URL).then(() => console.log('connection established'));
 
