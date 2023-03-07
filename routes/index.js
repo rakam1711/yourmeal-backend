@@ -1,5 +1,6 @@
 const express = require("express");
 const userRouter = require("./user")
+const windowRouter = require("./window")
 
 const router = express.Router();
 
@@ -24,5 +25,5 @@ router.get('/secrets', () => {
 })
 
 router.use('/user', userRouter)
-
+router.use('/window',windowRouter)
 module.exports = router

@@ -20,4 +20,14 @@ userSchema.pre('save', async function(next) {
 })
 
 const Users = mongoose.model('Users', userSchema)
+
+const windowSchema = new mongoose.Schema({
+  user: [{
+    type:mongoose.Types.ObjectId,
+    unique: true,
+    required: true
+  }]
+})
+const WindowInstance = mongoose.model('WindowInstance', windowSchema)
+
 module.exports = Users
