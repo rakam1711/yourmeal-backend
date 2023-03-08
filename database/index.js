@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
+// Users
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -19,7 +21,13 @@ userSchema.pre('save', async function(next) {
   next()
 })
 
+userSchema.methods.verifyPassword = async function(candidatePassword){
+  return bcrypt.compare(candidatePassword, this.password)
+}
+
 const Users = mongoose.model('Users', userSchema)
+
+// Window
 
 const windowSchema = new mongoose.Schema({
   user: [{
@@ -28,6 +36,7 @@ const windowSchema = new mongoose.Schema({
     required: true
   }]
 })
+
 const WindowInstance = mongoose.model('WindowInstance', windowSchema)
 
 module.exports = Users

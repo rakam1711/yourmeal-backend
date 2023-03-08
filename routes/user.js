@@ -1,34 +1,46 @@
-const express = require("express");
+const express = require("express")
 const bcrypt = require('bcrypt')
 const Users = require('../database')
-const userRouter = express.Router();
+const userRouter = express.Router()
 
 userRouter.get('/', (req, res) => {
   res.json({
     "success": true
-  }).status(200);
-});
+  }).status(200)
+})
 
 userRouter.post('/login', async (req, res) => {
   const { username, password } = req.body
-  const user = await Users.findOne({ username })
-
-      if(user){
-        bcrypt.compare(password , user.password , function(err, result) {
-              if(result === true){
-                res.render("secrets");
-              }
-              })
-        }
-
-});
-
+  try {
+    const user = await Users.findOne({ username })
+    if(!user){
+      res.json({ "success": false, "message": "User not found" }).status(200)
+    return
+    }
+    const isMatch = await user.verifyPassword(password)
+    if(!isMatch) {
+      res.json({ "success": false, "message": "Username and Password do not match" }).status(200)
+    return
+    }
+    res.render('secrets')
+  } catch(error) {
+    console.log(error)
+  }
+})
 
 userRouter.post('/register', async (req, res) => {
   const { username, password } = req.body
-  const user = await Users.create({ username, password })
+  try {
+    const checkUserExists = await Users.findOne({ username })
+    if(checkUserExists) { 
+      res.json({ success: false, message: "Username already in use" })
+      return
+    }
+    const user = await Users.create({ username, password })
+    res.json({ success: true }).status(200)
+  } catch (error) {
+    console.error(error)
+  }
+})
 
-  res.json().status(200)
-});
-
-module.exports= userRouter
+module.exports = userRouter
