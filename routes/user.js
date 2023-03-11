@@ -1,46 +1,36 @@
 const express = require("express")
 const bcrypt = require('bcrypt')
-const Users = require('../database')
+const { Users, Orders } = require('../database')
 const userRouter = express.Router()
 
-userRouter.get('/', (req, res) => {
+const user = "640c32c9826b95b4e6a6ac5e"
+
+userRouter.post('/order', async (req, res) => {
+  const { order } = req.body
+ 
+  const newOrder = await Orders.create({ ...order, user })
+
+  await Users.findByIdAndUpdate(user, {
+    $push: { orders: newOrder._id }
+  })
+  
   res.json({
     "success": true
   }).status(200)
 })
 
-userRouter.post('/login', async (req, res) => {
-  const { username, password } = req.body
-  try {
-    const user = await Users.findOne({ username })
-    if(!user){
-      res.json({ "success": false, "message": "User not found" }).status(200)
-    return
-    }
-    const isMatch = await user.verifyPassword(password)
-    if(!isMatch) {
-      res.json({ "success": false, "message": "Username and Password do not match" }).status(200)
-    return
-    }
-    res.render('secrets')
-  } catch(error) {
-    console.log(error)
-  }
+userRouter.get('/order', async (req, res) => {
+  const orders = await Orders.find({ user })
+
+  res.json(orders).status(200)
 })
 
-userRouter.post('/register', async (req, res) => {
-  const { username, password } = req.body
-  try {
-    const checkUserExists = await Users.findOne({ username })
-    if(checkUserExists) { 
-      res.json({ success: false, message: "Username already in use" })
-      return
-    }
-    const user = await Users.create({ username, password })
-    res.json({ success: true }).status(200)
-  } catch (error) {
-    console.error(error)
-  }
+userRouter.post('/address', async (req, res) => {
+  const { address } = req.body
+
+  await Users.findByIdAndUpdate(user, { address })
+
+  res.json({ success: true }).status(200)
 })
 
 module.exports = userRouter

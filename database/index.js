@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 // Users
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -13,6 +12,23 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+
+  role: {
+    type: String,
+    enum: ['USER', 'CHEF'],
+    default: 'USER',
+    required: true
+  },
+
+  orders: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Orders'
+  }],
+
+  address: {
+    type: String,
+    required: false
   }
 })
 
@@ -25,18 +41,22 @@ userSchema.methods.verifyPassword = async function(candidatePassword){
   return bcrypt.compare(candidatePassword, this.password)
 }
 
-const Users = mongoose.model('Users', userSchema)
-
-// Window
-
-const windowSchema = new mongoose.Schema({
-  user: [{
-    type:mongoose.Types.ObjectId,
-    unique: true,
+// Orders
+const orderSchema = new mongoose.Schema({
+  items: [{
+    type: String,
     required: true
-  }]
+  }],
+
+  user: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Users'
+  }
 })
 
-const WindowInstance = mongoose.model('WindowInstance', windowSchema)
+const Users = mongoose.model('Users', userSchema)
+const Orders = mongoose.model('Orders', orderSchema)
 
-module.exports = Users
+module.exports = {
+  Users, Orders
+}
