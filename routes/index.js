@@ -2,6 +2,8 @@ const express = require("express");
 const authRouter = require("./auth")
 const userRouter = require("./user")
 
+const protect = require('../middlewares/protect')
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -25,6 +27,6 @@ router.get('/secrets', () => {
 })
 
 router.use('/auth', authRouter)
-router.use('/user', userRouter)
+router.use('/user', protect, userRouter)
 
 module.exports = router

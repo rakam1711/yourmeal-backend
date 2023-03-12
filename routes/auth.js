@@ -21,7 +21,8 @@ userRouter.post('/login', async (req, res) => {
       res.json({ "success": false, "message": "Username and Password do not match" }).status(200)
     return
     }
-    res.render('secrets')
+    const token = user.getSignedToken()
+    res.json({ success: true, token }).status(200)
   } catch(error) {
     console.log(error)
   }
