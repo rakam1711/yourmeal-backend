@@ -29,10 +29,10 @@ userRouter.post('/login', async (req, res) => {
 })
 
 userRouter.post('/register', async (req, res) => {
-  const { username, password,role } = req.body
+  const { username, password, role } = req.body
   try {
     const checkUserExists = await Users.findOne({ username })
-    if(checkUserExists) { 
+    if(checkUserExists) {
       res.json({ success: false, message: "Username already in use" })
       return
     }
