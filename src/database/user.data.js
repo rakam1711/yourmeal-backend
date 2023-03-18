@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "test123"
 
 const userSchema = new mongoose.Schema({
-  username: {
+  email: {
     type: String,
     unique: true,
     required: true,
@@ -16,11 +16,14 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  role: {
+  firstname: {
     type: String,
-    enum: ["USER", "CHEF"],
-    default: "USER",
     required: true,
+  },
+
+  lastname: {
+    type: String,
+    required: true
   },
 
   orders: [

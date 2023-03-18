@@ -40,18 +40,18 @@ const loginController = async (req) => {
 }
 
 const registerController = async (req) => {
-  const { username, password, role } = req.body
+  const { email, password, firstname, lastname, phone } = req.body
   const errors = {}
   const data = {}
 
   block: try {
-    const checkUserExists = await Users.findOne({ username })
+    const checkUserExists = await Users.findOne({ email })
 
     if(checkUserExists) {
       errors.message = "Username already in use"
       break block
     }
-    const user = await Users.create({ username, password, role })
+    const user = await Users.create({ email, password, firstname, lastname, phone })
 
     const token = user.getSignedToken()
     data.token = token
