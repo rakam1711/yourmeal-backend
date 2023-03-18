@@ -51,6 +51,7 @@ const registerController = async (req) => {
       errors.message = "Email already in use"
       break block
     }
+
     const user = await Users.create({ email, password, firstname, lastname, phone })
 
     const token = user.getSignedToken()
