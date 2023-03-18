@@ -1,15 +1,12 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
-const ejs = require("ejs");
 require('dotenv').config();
 
 const router = require("./routes");
 
 const app = express();
 
-app.use(express.static("public"));
-app.set('view engine','ejs');
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
