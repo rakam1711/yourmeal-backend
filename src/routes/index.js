@@ -1,7 +1,7 @@
 const express = require("express");
 const authRouter = require("./auth.route")
-const resturantRouter = require("./resturant");
-const userRouter = require("./user")
+const resturantRouter = require("./resturant.route");
+const userRouter = require("./user.route")
 
 const protect = require('../middlewares/protect');
 
