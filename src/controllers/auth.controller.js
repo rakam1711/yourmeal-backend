@@ -14,7 +14,7 @@ const loginController = async (req) => {
 
     const isMatch = await user.verifyPassword(password)
     if(!isMatch) {
-      errors.message = "Username and Password do not match"
+      errors.message = "Email and Password do not match"
       break block
     }
 
@@ -48,7 +48,7 @@ const registerController = async (req) => {
     const checkUserExists = await Users.findOne({ email })
 
     if(checkUserExists) {
-      errors.message = "Username already in use"
+      errors.message = "Email already in use"
       break block
     }
     const user = await Users.create({ email, password, firstname, lastname, phone })
