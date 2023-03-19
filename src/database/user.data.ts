@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema<UserModel>({
     required: true
   }, 
 
+  phone: {
+    type: String,
+    required: true,
+  },
+
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -67,7 +72,7 @@ userSchema.methods.verifyPassword = async function (candidatePassword:string) {
 };
 
 userSchema.methods.getSignedToken = function () {
-  return jwt.sign({ userid: this._id, role: this.role }, JWT_SECRET_KEY, {
+  return jwt.sign({ userid: this._id }, JWT_SECRET_KEY, {
     expiresIn: "3d",
   });
 };
