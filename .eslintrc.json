@@ -1,16 +1,24 @@
 {
   "env": {
-    "browser": true,
-    "commonjs": true,
-    "es2021": true
+    "es2021": true,
+    "node": true
   },
-  "extends": "standard",
+  "extends": "standard-with-typescript",
   "overrides": [
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "tsconfig.json"
   },
   "rules": {
-    // "semi": [2, "never"]
+    "semi": [2, "never"],
+    "no-labels": 0,
+
+
+    "@typescript-eslint/no-misused-promises": 0,
+    "@typescript-eslint/strict-boolean-expressions": 0,
+    "@typescript-eslint/prefer-nullish-coalescing": 0
   }
 }

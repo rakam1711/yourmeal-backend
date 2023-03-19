@@ -1,11 +1,10 @@
-import express from "express"
+import express from 'express'
 import {
-  addressController, 
-  orderController, 
+  addressController,
+  orderController,
   userOrdersController
 } from '../controllers/user.controller'
 
-  
 const userRouter = express.Router()
 
 userRouter.post('/order', async (req, res) => {

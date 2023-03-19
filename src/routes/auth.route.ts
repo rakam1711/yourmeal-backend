@@ -13,5 +13,4 @@ authRouter.post('/register', async (req, res) => {
   res.json(response).status(200)
 })
 
-
 export default authRouter

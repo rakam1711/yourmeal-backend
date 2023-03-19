@@ -1,9 +1,9 @@
-import  { Router } from 'express'
+import { Router } from 'express'
 const resturantRouter = Router()
 
 resturantRouter.get('/', (req, res) => {
-  const resturants:any = []
-  res.json({ success:true, resturants }).status(200)
+  const resturants: any = []
+  res.json({ success: true, resturants }).status(200)
 })
 
 resturantRouter.get('/:id', (req, res) => {

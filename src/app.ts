@@ -3,24 +3,25 @@ import http from 'http'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
-dotenv.config()
-
 import router from './routes'
 
-const app = express();
+dotenv.config()
+
+const app = express()
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-const DATABASE_URL = process.env.DATABASE_URL || "mongodb://0.0.0.0:27017/test"
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://0.0.0.0:27017/test'
 
+mongoose.connect(DATABASE_URL)
+  .then(() => { console.log('connection established') })
+  .catch((error) => { console.error(error) })
 
-mongoose.connect(DATABASE_URL).then(() => console.log('connection established'));
+app.use('/', router)
 
-app.use("/", router);
+const server = http.createServer(app)
 
-const server = http.createServer(app);
-
-server.listen("3000",() => {
-  console.log("server established");
+server.listen('3000', () => {
+  console.log('server established')
 })
