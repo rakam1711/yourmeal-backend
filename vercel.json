@@ -1,3 +1,3 @@
 {
-  "routes": [{ "src": "/(.*)", "dest": "dist/app.js"}]
+  "routes": [{ "src": "/(.*)", "dest": "app.js"}]
 }
