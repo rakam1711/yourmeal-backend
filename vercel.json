@@ -1,5 +1,3 @@
 {
-  "version": 2,
-  "name": "native-server",
-  "routes": [{ "src": "/(.*)", "dest": "src/pp.js"}]
+  "routes": [{ "src": "/(.*)", "dest": "dist/app.js"}]
 }
