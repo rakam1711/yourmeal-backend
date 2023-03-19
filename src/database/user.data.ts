@@ -44,13 +44,6 @@ const userSchema = new mongoose.Schema<UserModel>({
     required: true
   },
 
-  orders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Orders'
-    }
-  ],
-
   address: {
     type: String,
     required: false

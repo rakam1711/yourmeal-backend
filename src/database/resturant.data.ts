@@ -12,17 +12,26 @@ const resturantSchema = new mongoose.Schema({
   },
 
   contacts: {
-    type: String,
+    type: {
+      emails: {
+        type: [String],
+        required: true
+      },
+      phones: {
+        type: [String],
+        required: true
+      }
+    },
     require: true
   },
 
   images: {
-    type: String,
+    type: [String],
     require: true
   },
 
-  tag: {
-    type: String,
+  tags: {
+    type: [String],
     require: true
   },
 
@@ -32,8 +41,28 @@ const resturantSchema = new mongoose.Schema({
   },
 
   menu: {
-    type: String,
-    require: true
+    type: [{
+      name: {
+        type: String,
+        required: true
+      },
+
+      thumbnail: {
+        type: String,
+        required: false
+      },
+
+      price: {
+        type: Number,
+        required: true
+      },
+
+      quantity: {
+        type: String,
+        required: true
+      }
+    }],
+    require: false
   }
 })
 

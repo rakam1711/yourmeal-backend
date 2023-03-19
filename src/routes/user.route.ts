@@ -1,24 +1,41 @@
-import express from 'express'
+import express, { type Response } from 'express'
 import {
+  loginController,
+  registerController,
   addressController,
-  orderController,
+  newOrderController,
   userOrdersController
 } from '../controllers/user.controller'
+import { type Request } from '../typings'
+
+import protect from '../middlewares/protect'
 
 const userRouter = express.Router()
 
-userRouter.post('/order', async (req, res) => {
-  const response = await orderController(req)
+// User auth routes
+userRouter.post('/login', async (req: Request, res: Response) => {
+  const response = await loginController(req)
   res.json(response).status(200)
 })
 
-userRouter.get('/orders', async (req, res) => {
+userRouter.post('/register', async (req: Request, res: Response) => {
+  const response = await registerController(req)
+  res.json(response).status(200)
+})
+
+// User features routes
+userRouter.post('/order', protect, async (req: Request, res: Response) => {
+  const response = await newOrderController(req)
+  res.json(response).status(200)
+})
+
+userRouter.get('/orders', protect, async (req: Request, res: Response) => {
   const response = await userOrdersController(req)
   res.json(response).status(200)
 })
 
-userRouter.post('/address', async (req, res) => {
-  const response = await addressController(res)
+userRouter.post('/address', protect, async (req: Request, res: Response) => {
+  const response = await addressController(req)
   res.json(response).status(200)
 })
 
