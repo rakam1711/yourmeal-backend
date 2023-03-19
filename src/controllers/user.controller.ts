@@ -1,9 +1,11 @@
-const { Users, Orders } = require('../database')
+import db from '../database'
 
-const orderController = async (req) => {
+const { Users, Orders } = db
+
+export const orderController = async (req:any) => {
   const { order } = req.body
-  const errors = {}
-  const data = {}
+  const errors:any = {}
+  const data:any = {}
 
   try {
     const newOrder = await Orders.create({ ...order, user: req.user })
@@ -24,9 +26,9 @@ const orderController = async (req) => {
   }
 }
 
-const userOrdersController = async (req) => {
-  const errors = {}
-  const data = {}
+export const userOrdersController = async (req:any) => {
+  const errors:any = {}
+  const data:any = {}
 
   try {
     const orders = await Orders.find({ user: req.user })
@@ -42,10 +44,10 @@ const userOrdersController = async (req) => {
   }
 }
 
-const addressController = async (req) => {
+export const addressController = async (req:any) => {
   const { address } = req.body
-  const errors = {}
-  const data = {}
+  const errors:any = {}
+  const data:any = {}
 
   try {
     const user = await Users.findByIdAndUpdate(req.user, { address })
@@ -61,10 +63,4 @@ const addressController = async (req) => {
       data
     }
   }
-}
-
-module.exports = {
-  addressController,
-  userOrdersController,
-  orderController
 }

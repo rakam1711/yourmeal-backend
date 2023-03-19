@@ -1,5 +1,5 @@
-const express = require("express")
-const { loginController, registerController } = require("../controllers/auth.controller")
+import express from 'express'
+import loginController, { registerController } from '../controllers/auth.controller'
 
 const authRouter = express.Router()
 
@@ -13,4 +13,5 @@ authRouter.post('/register', async (req, res) => {
   res.json(response).status(200)
 })
 
-module.exports = authRouter
+
+export default authRouter

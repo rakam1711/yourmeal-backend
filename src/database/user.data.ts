@@ -1,10 +1,23 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "test123"
 
-const userSchema = new mongoose.Schema({
+interface UserModel {
+  firstname: string
+  lastname: string
+  email: string
+  password: string
+  phone: string
+  orders: string[]
+  address: string
+
+  verifyPassword(candidatePassword:string): boolean
+  getSignedToken(): string
+}
+
+const userSchema = new mongoose.Schema<UserModel>({
   email: {
     type: String,
     unique: true,
@@ -25,6 +38,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  
+  phone: {
+    type: String,
+    required: true
+  }, 
 
   orders: [
     {
@@ -44,7 +62,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.verifyPassword = async function (candidatePassword) {
+userSchema.methods.verifyPassword = async function (candidatePassword:string) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
@@ -56,4 +74,4 @@ userSchema.methods.getSignedToken = function () {
 
 const Users = mongoose.model("Users", userSchema);
 
-module.exports = Users;
+export default Users

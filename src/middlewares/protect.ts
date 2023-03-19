@@ -1,9 +1,9 @@
-const { Users } = require("../database");
-const jwt = require("jsonwebtoken");
+import db from '../database'
+import jwt from 'jsonwebtoken'
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "test123"
+const JWT_SECRET_KEY:string = process.env.JWT_SECRET_KEY || "test123"
 
-const protect = async (req, res, next) => {
+const protect = async (req:any, res:any, next:any) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -12,9 +12,9 @@ const protect = async (req, res, next) => {
   }
 
   const token = authorization.split(" ")[1];
-  const data = jwt.decode(token, JWT_SECRET_KEY);
+  const data:any = jwt.verify(token, JWT_SECRET_KEY);
 
-  const user = await Users.findById(data.userid);
+  const user = await db.Users.findById(data?.userid);
   if (!user) {
     res.json({ success: false, message: "User does not exist " }).status(404);
   }
@@ -23,4 +23,4 @@ const protect = async (req, res, next) => {
   next();
 };
 
-module.exports = protect;
+export default protect

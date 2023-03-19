@@ -1,9 +1,11 @@
-const express = require("express");
-const http = require("http");
-const mongoose = require("mongoose");
-require('dotenv').config();
+import express from 'express'
+import http from 'http'
+import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
-const router = require("./src/routes");
+dotenv.config()
+
+import router from './routes'
 
 const app = express();
 

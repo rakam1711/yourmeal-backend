@@ -1,8 +1,8 @@
-const { Router } = require('express')
+import  { Router } from 'express'
 const resturantRouter = Router()
 
 resturantRouter.get('/', (req, res) => {
-  const resturants = []
+  const resturants:any = []
   res.json({ success:true, resturants }).status(200)
 })
 
@@ -11,4 +11,4 @@ resturantRouter.get('/:id', (req, res) => {
   res.json({ success: true, resturant }).status(200)
 })
 
-module.exports = resturantRouter
+export default resturantRouter

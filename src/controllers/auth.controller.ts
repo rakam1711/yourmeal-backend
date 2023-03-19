@@ -1,37 +1,39 @@
-const { Users } = require('../database')
+import db from "../database"
 
-const loginController = async (req) => {
-  const { username, password } = req.body
-  const errors = {}
-  const data = {}
+const {Users} = db
+
+export default async (req:any) => {
+  const { email, password } = req.body
+  const errors:any = {}
+  const data:any = {}
 
   block: try {
-    const user = await Users.findOne({ username })
-    if(!user){
+    const user = await Users.findOne({ email })
+    if (!user) {
       errors.message = "User not found"
       break block
     }
 
     const isMatch = await user.verifyPassword(password)
-    if(!isMatch) {
+    if (!isMatch) {
       errors.message = "Email and Password do not match"
       break block
     }
 
     const token = user.getSignedToken()
-    if(!token) {
+    if (!token) {
       errors.message = "Unable to login the user. Please contact the server admin"
       break block
     }
 
     data.token = token
 
-  } catch(error) {
+  } catch (error) {
     errors.message = error
     console.log(error)
 
   } finally {
-    return { 
+    return {
       success: Object.keys(errors).length < 1,
       errors,
       data
@@ -39,10 +41,10 @@ const loginController = async (req) => {
   }
 }
 
-const registerController = async (req) => {
+export const registerController = async (req:any) => {
   const { email, password, firstname, lastname, phone } = req.body
-  const errors = {}
-  const data = {}
+  const errors:any = {}
+  const data:any = {}
 
   block: try {
     const checkUserExists = await Users.findOne({ email })
@@ -70,7 +72,3 @@ const registerController = async (req) => {
   }
 }
 
-module.exports = {
-  loginController,
-  registerController
-}

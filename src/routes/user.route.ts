@@ -1,10 +1,11 @@
-const express = require("express")
-const { 
+import express from "express"
+import {
   addressController, 
   orderController, 
-  userOrdersController 
-} = require('../controllers/user.controller')
+  userOrdersController
+} from '../controllers/user.controller'
 
+  
 const userRouter = express.Router()
 
 userRouter.post('/order', async (req, res) => {
@@ -22,6 +23,4 @@ userRouter.post('/address', async (req, res) => {
   res.json(response).status(200)
 })
 
-module.exports = userRouter
-
-console.log()
+export default userRouter
