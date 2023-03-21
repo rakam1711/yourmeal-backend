@@ -3,6 +3,8 @@ import { type DataReturnType, type Request } from '../typings'
 
 const { Users, Orders } = db
 
+// Auth functions
+
 export const loginController = async (req: Request): Promise<DataReturnType<{ token: string }>> => {
   const { email, password } = req.body
   const errors: any = {}
@@ -68,6 +70,8 @@ export const registerController = async (req: Request): Promise<DataReturnType<{
     data
   }
 }
+
+// Other functions
 
 export const newOrderController = async (req: Request): Promise<DataReturnType<any>> => {
   const { order } = req.body
