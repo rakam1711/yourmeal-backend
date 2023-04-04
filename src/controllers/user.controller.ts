@@ -4,34 +4,31 @@ import { type DataReturnType, type Request } from '../typings'
 const { Users, Orders } = db
 
 // Auth functions
-
-export const loginController = async (req: Request): Promise<DataReturnType<{ token: string }>> => {
+// Login Controller Function
+export const loginController = async (req: Request): Promise<DataReturnType<{ token?: string }>> => {
   const { email, password } = req.body
-  const errors: any = {}
-  const data: any = {}
+  const errors: string[] = []
+  const data: { token?: string } = {}
 
-  block: try {
+  try {
     const user = await Users.findOne({ email })
     if (!user) {
-      errors.message = 'User not found'
-      break block
+      throw new Error('User not found')
     }
 
     const isMatch = await user.verifyPassword(password)
     if (!isMatch) {
-      errors.message = 'Email and Password do not match'
-      break block
+      throw new Error('Email and Password do not match')
     }
 
     const token = user.getSignedToken()
     if (!token) {
-      errors.message = 'Unable to login the user. Please contact the server admin'
-      break block
+      throw new Error('Unable to login the user. Please contact the server admin')
     }
 
     data.token = token
   } catch (error) {
-    errors.message = error
+    errors.push(error as string)
     console.log(error)
   }
 
@@ -42,17 +39,21 @@ export const loginController = async (req: Request): Promise<DataReturnType<{ to
   }
 }
 
-export const registerController = async (req: Request): Promise<DataReturnType<{ token: string }>> => {
+// Register Controller Functions
+export const registerController = async (req: Request): Promise<DataReturnType<{ token?: string }>> => {
   const { email, password, firstname, lastname, phone } = req.body
-  const errors: any = {}
-  const data: any = {}
+  const errors: string[] = []
+  const data: { token?: string } = {}
 
-  block: try {
-    const checkUserExists = await Users.findOne({ email })
+  try {
+    const checkEmailExists = await Users.findOne({ email })
+    if (checkEmailExists) {
+      throw new Error('Email already in use')
+    }
 
-    if (checkUserExists) {
-      errors.message = 'Email already in use'
-      break block
+    const checkPhoneExists = await Users.findOne({ phone })
+    if (checkPhoneExists) {
+      throw new Error('Phone number already in use')
     }
 
     const user = await Users.create({ email, password, firstname, lastname, phone })
@@ -60,8 +61,7 @@ export const registerController = async (req: Request): Promise<DataReturnType<{
     const token = user.getSignedToken()
     data.token = token
   } catch (error) {
-    errors.message = error
-    console.error(error)
+    errors.push(error as string)
   }
 
   return {
@@ -72,20 +72,20 @@ export const registerController = async (req: Request): Promise<DataReturnType<{
 }
 
 // Other functions
-
 export const newOrderController = async (req: Request): Promise<DataReturnType<any>> => {
-  const { order } = req.body
-  const errors: any = {}
+  const errors: string[] = []
   const data: any = {}
 
-  try {
-    const newOrder = await Orders.create({ ...order, user: req.user })
-    if (!newOrder) {
-      errors.message = 'Unable to place the order. Please try later'
-    }
-  } catch (error) {
-    errors.message = error
-  }
+  // TODO: Add implementation
+
+  // try {
+  //   const newOrder = await Orders.create({ ...order, user: req.user })
+  //   if (!newOrder) {
+  //     errors.message = 'Unable to place the order. Please try later'
+  //   }
+  // } catch (error) {
+  //   errors.message = error
+  // }
 
   return {
     success: Object.keys(errors).length < 1,
@@ -95,14 +95,14 @@ export const newOrderController = async (req: Request): Promise<DataReturnType<a
 }
 
 export const userOrdersController = async (req: Request): Promise<DataReturnType<any>> => {
-  const errors: any = {}
+  const errors: string[] = []
   const data: any = {}
 
   try {
     const orders = await Orders.find({ user: req.user })
     data.orders = orders
   } catch (error) {
-    errors.message = error
+    errors.push(error as string)
   }
 
   return {
@@ -114,16 +114,16 @@ export const userOrdersController = async (req: Request): Promise<DataReturnType
 
 export const addressController = async (req: Request): Promise<DataReturnType<any>> => {
   const { address } = req.body
-  const errors: any = {}
+  const errors: string[] = []
   const data: any = {}
 
   try {
     const user = await Users.findByIdAndUpdate(req.user, { address })
     if (!user) {
-      errors.message = 'User not found. Invalid token'
+      throw new Error('User not found')
     }
   } catch (error) {
-    errors.message = error
+    errors.push(error as string)
   }
 
   return {

@@ -24,5 +24,5 @@ app.use('/', router)
 const server = http.createServer(app)
 
 server.listen(PORT, () => {
-  console.log('server established')
+  console.log(`Server established at http://localhost:${PORT}/`)
 })

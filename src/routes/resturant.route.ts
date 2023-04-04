@@ -12,7 +12,7 @@ resturantRouter.post('/login', async (req, res) => {
   res.json(response).status(200)
 })
 
-resturantRouter.post('/register', async (req, res) => {
+resturantRouter.post('/add', async (req, res) => {
   const response = await registerResturantController(req)
   res.json(response).status(200)
 })

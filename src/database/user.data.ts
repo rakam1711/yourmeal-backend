@@ -2,20 +2,9 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+import { type UserModel } from '../typings/user.types'
+
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'test123'
-
-interface UserModel {
-  firstname: string
-  lastname: string
-  email: string
-  password: string
-  phone: string
-  orders: string[]
-  address: string
-
-  verifyPassword: (candidatePassword: string) => Promise<boolean>
-  getSignedToken: () => string
-}
 
 const userSchema = new mongoose.Schema<UserModel>({
   email: {

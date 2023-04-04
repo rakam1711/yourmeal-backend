@@ -5,8 +5,6 @@ export interface Request extends Req {
 
 export interface DataReturnType<T> {
   success: boolean
-  errors: {
-    messsage?: string
-  }
+  errors: string[]
   data: T
 }

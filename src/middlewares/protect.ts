@@ -7,7 +7,11 @@ const protect = async (req: any, res: any, next: any): Promise<void> => {
   const { authorization } = req.headers
 
   if (!authorization) {
-    res.json({ success: false, errors: { message: 'User not logged in' }, data: {} }).status(404)
+    res.json({
+      success: false,
+      errors: { message: 'User not logged in' },
+      data: {}
+    }).status(404)
     return
   }
 

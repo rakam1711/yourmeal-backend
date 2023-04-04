@@ -1,16 +1,34 @@
 import { type Request } from 'express'
+import db from '../database'
 import { type DataReturnType } from '../typings'
 
 // Resturant Auth Funtions
 
 export const loginResturantController = async (req: Request): Promise<DataReturnType<any>> => {
-  const { name } = req.body
-  const errors = {}
+  const {
+    name,
+    description,
+    contacts,
+    images,
+    tags,
+    address,
+    menu
+  } = req.body
+  const errors: string[] = []
   const data = {}
 
   try {
-    console.log(name)
+    await db.Resturants.create({
+      name,
+      description,
+      contacts,
+      images,
+      tags,
+      address,
+      menu
+    })
   } catch (error) {
+    errors.push(error as string)
     console.log(error)
   }
 
@@ -22,7 +40,7 @@ export const loginResturantController = async (req: Request): Promise<DataReturn
 }
 
 export const registerResturantController = async (req: Request): Promise<DataReturnType<any>> => {
-  const errors = {}
+  const errors: string[] = []
   const data = {}
 
   return {

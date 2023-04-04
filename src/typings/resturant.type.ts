@@ -1,6 +1,10 @@
 export interface ResturantType {
   name: string
   description: string
+  contacts: {
+    emails: string[]
+    phones: string[]
+  }
   images: string[]
   tags: string[]
   address: string
@@ -12,4 +16,5 @@ export interface MenuItemType {
   thumbnail: string
   price: string
   quantity: string
+  tags: string[]
 }
