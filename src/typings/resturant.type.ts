@@ -5,10 +5,18 @@ export interface ResturantType {
     emails: string[]
     phones: string[]
   }
-  images: string
+  image: string
   tags: string[]
   address: string
-  menu: MenuItemType[]
+}
+
+export interface ResturantModel extends ResturantType {
+  email: string
+  password: string
+
+  
+  verifyPassword: (candidatePassword: string) => Promise<boolean>
+  getSignedToken: () => string
 }
 
 export interface MenuItemType {

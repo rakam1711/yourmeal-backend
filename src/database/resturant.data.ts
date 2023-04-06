@@ -1,14 +1,30 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-const resturantSchema = new mongoose.Schema({
+import { type ResturantModel } from '../typings/resturant.type'
+
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'test123'
+
+const resturantSchema = new mongoose.Schema<ResturantModel>({
   name: {
     type: String,
-    require: true
+    required: true
+  },
+
+  email: {
+    type: String,
+    required: true
+  },
+
+  password: {
+    type: String,
+    required: true
   },
 
   description: {
     type: String,
-    require: true
+    required: true
   },
 
   contacts: {
@@ -25,8 +41,8 @@ const resturantSchema = new mongoose.Schema({
     require: true
   },
 
-  images: {
-    type: [String],
+  image: {
+    type: String,
     require: true
   },
 
@@ -40,6 +56,21 @@ const resturantSchema = new mongoose.Schema({
     require: true
   }
 })
+
+resturantSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(this.password, 10)
+  next()
+})
+
+resturantSchema.methods.verifyPassword = async function (candidatePassword: string) {
+  return await bcrypt.compare(candidatePassword, this.password)
+}
+
+resturantSchema.methods.getSignedToken = function () {
+  return jwt.sign({ userid: this._id }, JWT_SECRET_KEY, {
+    expiresIn: '3d'
+  })
+}
 
 const Resturants = mongoose.model('Resturants', resturantSchema)
 export default Resturants

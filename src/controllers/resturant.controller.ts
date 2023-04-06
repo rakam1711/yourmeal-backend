@@ -5,28 +5,13 @@ import { type DataReturnType } from '../typings'
 // Resturant Auth Funtions
 
 export const loginResturantController = async (req: Request): Promise<DataReturnType<any>> => {
-  const {
-    name,
-    description,
-    contacts,
-    images,
-    tags,
-    address,
-    menu
-  } = req.body
+
+
   const errors: string[] = []
   const data = {}
 
   try {
-    await db.Resturants.create({
-      name,
-      description,
-      contacts,
-      images,
-      tags,
-      address,
-      menu
-    })
+    
   } catch (error) {
     errors.push(error as string)
     console.log(error)
@@ -40,8 +25,33 @@ export const loginResturantController = async (req: Request): Promise<DataReturn
 }
 
 export const registerResturantController = async (req: Request): Promise<DataReturnType<any>> => {
+  const {
+    name,
+    description,
+    contacts,
+    images,
+    tags,
+    address
+  } = req.body
+  
   const errors: string[] = []
   const data = {}
+
+  try {
+    const resturant = await db.Resturants.create({
+      name,
+      description,
+      contacts,
+      images,
+      tags,
+      address
+    })
+
+    
+  } catch (error) {
+    errors.push(error as string)
+    console.log(error)
+  }
 
   return {
     success: Object.keys(errors).length < 1,
