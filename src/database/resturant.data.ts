@@ -38,12 +38,6 @@ const resturantSchema = new mongoose.Schema({
   address: {
     type: String,
     require: true
-  },
-
-  menu: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'MenuItems',
-    require: false
   }
 })
 

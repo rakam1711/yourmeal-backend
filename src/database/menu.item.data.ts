@@ -1,6 +1,12 @@
 import mongoose from 'mongoose'
 
 const menuItemSchema = new mongoose.Schema({
+  resturant: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Resturants',
+    required: true
+  },
+  
   name: {
     type: String,
     required: true
@@ -22,8 +28,15 @@ const menuItemSchema = new mongoose.Schema({
     required: true
   },
 
+  category: {
+    type: String,
+    enum: ['Starter', 'Main Course', 'Salad', 'Dessert', 'Drinks', 'Special', 'Others'],
+    required: true
+  },
+
   tags: {
-    type: [String]
+    type: [String],
+    required: true
   }
 })
 

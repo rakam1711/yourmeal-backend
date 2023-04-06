@@ -5,7 +5,7 @@ export interface ResturantType {
     emails: string[]
     phones: string[]
   }
-  images: string[]
+  images: string
   tags: string[]
   address: string
   menu: MenuItemType[]
