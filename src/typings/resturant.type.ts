@@ -14,15 +14,15 @@ export interface ResturantModel extends ResturantType {
   email: string
   password: string
 
-  
   verifyPassword: (candidatePassword: string) => Promise<boolean>
   getSignedToken: () => string
 }
 
 export interface MenuItemType {
+  resturant: string
   name: string
   thumbnail: string
   price: string
-  quantity: string
+  quantity: 'Count' | 'Bowl' | 'Weight' | 'Volume'
   tags: string[]
 }
