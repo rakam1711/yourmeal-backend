@@ -1,7 +1,7 @@
 import db from '../database'
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY || 'test123'
+import { JWT_SECRET_KEY } from '../configs/constants'
 
 const protect = async (req: any, res: any, next: any): Promise<void> => {
   const { authorization } = req.headers
@@ -18,12 +18,21 @@ const protect = async (req: any, res: any, next: any): Promise<void> => {
   const token = authorization.split(' ')[1]
   const data: any = jwt.verify(token, JWT_SECRET_KEY)
 
-  const user = await db.Users.findById(data?.userid)
-  if (!user) {
-    res.json({ success: false, message: 'User does not exist ' }).status(404)
+  if(data.role==='user'){  
+    const user = await db.Users.findById(data?.userid)
+    if (!user) {
+      res.json({ success: false, message: 'User does not exist ' }).status(404)
+    }
+    req.user = data.userid
   }
-
-  req.user = data.userid
+  
+  if(data.role==='resturant'){
+    const resturant = await db.Resturants.findById(data?.resturantid)
+    if (!resturant) {
+      res.json({ success: false, message: 'Resturant does not exist ' }).status(404)
+    }
+    req.resturant = data.resturantid
+  }
   next()
 }
 

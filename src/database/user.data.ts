@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 import { type UserModel } from '../typings/user.types'
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'test123'
+import { JWT_SECRET_KEY } from '../configs/constants'
 
 const userSchema = new mongoose.Schema<UserModel>({
   email: {
@@ -49,7 +48,7 @@ userSchema.methods.verifyPassword = async function (candidatePassword: string) {
 }
 
 userSchema.methods.getSignedToken = function () {
-  return jwt.sign({ userid: this._id }, JWT_SECRET_KEY, {
+  return jwt.sign({ userid: this._id, role: 'user' }, JWT_SECRET_KEY, {
     expiresIn: '3d'
   })
 }

@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 import { type ResturantModel } from '../typings/resturant.type'
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'test123'
+import { JWT_SECRET_KEY } from '../configs/constants'
 
 const resturantSchema = new mongoose.Schema<ResturantModel>({
   name: {
@@ -67,7 +66,7 @@ resturantSchema.methods.verifyPassword = async function (candidatePassword: stri
 }
 
 resturantSchema.methods.getSignedToken = function () {
-  return jwt.sign({ userid: this._id }, JWT_SECRET_KEY, {
+  return jwt.sign({ resturantid: this._id, role: 'resturant' }, JWT_SECRET_KEY, {
     expiresIn: '3d'
   })
 }
