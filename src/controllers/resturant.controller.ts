@@ -1,8 +1,6 @@
 import db from '../database'
 import { type DataReturnType, type Request } from '../typings'
 
-const { Resturants, MenuItems } = db
-
 // Resturant Auth Funtions
 export const loginResturantController = async (req: Request): Promise<DataReturnType<any>> => {
   const { email, password } = req.body
@@ -66,6 +64,25 @@ export const registerResturantController = async (req: Request): Promise<DataRet
 }
 
 // Other Resturant Functions
+
+export const getResturantMenuController = async (req: Request): Promise<DataReturnType<any>> => {
+  const errors: string[] = []
+  const data: { items?: any[] } = {}
+
+  try {
+    const items = await db.MenuItems.find({ resturant: req.params.resturantid })
+    data.items = items
+  } catch (error) {
+    errors.push(error as string)
+  }
+
+  return {
+    success: errors.length < 1,
+    errors,
+    data
+  }
+}
+
 export const addMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
   const {
     name,
@@ -106,13 +123,31 @@ export const addMenuItemController = async (req: Request): Promise<DataReturnTyp
   }
 }
 
-export const getResturantMenuController = async (req: Request): Promise<DataReturnType<any>> => {
+export const removeMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
   const errors: string[] = []
-  const data: { items?: any[] } = {}
+  const data = {}
 
   try {
-    const items = await db.MenuItems.find({ resturant: req.params.resturantid })
-    data.items = items
+    await db.MenuItems.findByIdAndDelete(req.params.itemid)
+  } catch (error) {
+    errors.push(error as string)
+  }
+
+  return {
+    success: errors.length < 1,
+    errors,
+    data
+  }
+}
+
+export const updateMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
+  const { menuitem } = req.body
+  const errors: string[] = []
+  const data: { item?: any } = {}
+
+  try {
+    const item = await db.MenuItems.findByIdAndUpdate(req.params.itemid, menuitem)
+    data.item = item
   } catch (error) {
     errors.push(error as string)
   }

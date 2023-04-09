@@ -3,7 +3,9 @@ import {
   loginResturantController,
   registerResturantController,
   addMenuItemController,
-  getResturantMenuController
+  getResturantMenuController,
+  removeMenuItemController,
+  updateMenuItemController
 } from '../controllers/resturant.controller'
 
 import protect from '../middlewares/protect'
@@ -22,13 +24,33 @@ resturantRouter.post('/add', async (req, res) => {
 })
 
 // Resturant feature routes
-resturantRouter.post('/menu/add', async(req, res, next) => protect(req, res, next), async(req, res)=> {
-  const response = await addMenuItemController(req)
-  res.json(response).status(200)
-})
-
 resturantRouter.get('/:resturantid/menu', async (req, res) => {
   const response = await getResturantMenuController(req)
   res.json(response).status(200)
 })
+
+resturantRouter.post('/menu/add',
+  async (req, res, next) => { await protect(req, res, next) },
+  async (req, res) => {
+    const response = await addMenuItemController(req)
+    res.json(response).status(200)
+  }
+)
+
+resturantRouter.post('/menu/:itemid/delete',
+  async (req, res, next) => { await protect(req, res, next) },
+  async (req, res) => {
+    const response = await removeMenuItemController(req)
+    res.json(response).status(200)
+  }
+)
+
+resturantRouter.post('/menu/:itemid/update',
+  async (req, res, next) => { await protect(req, res, next) },
+  async (req, res) => {
+    const response = await updateMenuItemController(req)
+    res.json(response).status(200)
+  }
+)
+
 export default resturantRouter
