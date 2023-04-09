@@ -1,9 +1,10 @@
 import { type Request, type DataReturnType } from '../typings'
 import db from '../database'
+import { type OrderModel } from '../typings/order.type'
 
-export const addOrderController = async (req: Request): Promise<DataReturnType<any>> => {
+export const addOrderController = async (req: Request): Promise<DataReturnType<{ order?: OrderModel }>> => {
   const errors: string[] = []
-  const data: { order?: any } = {}
+  const data: { order?: OrderModel } = {}
 
   const {
     resturant,
@@ -48,13 +49,17 @@ export const addOrderController = async (req: Request): Promise<DataReturnType<a
   }
 }
 
-export const updateOrderController = async (req: Request): Promise<DataReturnType<any>> => {
+export const updateOrderController = async (req: Request): Promise<DataReturnType<{ order?: OrderModel }>> => {
   const errors: string[] = []
-  const data: { order?: any } = {}
+  const data: { order?: OrderModel } = {}
   const { userorder } = req.body
 
   try {
     const order = await db.Orders.findByIdAndUpdate(req.params.orderid, userorder)
+    if (!order) {
+      throw new Error('Order does not exist')
+    }
+
     data.order = order
   } catch (error) {
     errors.push(error as string)

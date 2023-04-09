@@ -2,9 +2,7 @@ import express, { type Response } from 'express'
 import {
   loginController,
   registerController,
-  addressController,
-  newOrderController,
-  userOrdersController
+  addressController
 } from '../controllers/user.controller'
 import { type Request } from '../typings'
 
@@ -24,16 +22,6 @@ userRouter.post('/register', async (req: Request, res: Response) => {
 })
 
 // User features routes
-userRouter.post('/order', protect, async (req: Request, res: Response) => {
-  const response = await newOrderController(req)
-  res.json(response).status(200)
-})
-
-userRouter.get('/orders', protect, async (req: Request, res: Response) => {
-  const response = await userOrdersController(req)
-  res.json(response).status(200)
-})
-
 userRouter.post('/address', protect, async (req: Request, res: Response) => {
   const response = await addressController(req)
   res.json(response).status(200)

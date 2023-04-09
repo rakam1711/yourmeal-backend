@@ -23,7 +23,7 @@ export const loginController = async (req: Request): Promise<DataReturnType<{ to
 
     const token = user.getSignedToken()
     if (!token) {
-      throw new Error('Unable to login the user. Please contact the server admin')
+      throw new Error('Unable to login the user')
     }
 
     data.token = token

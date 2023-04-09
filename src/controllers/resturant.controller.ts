@@ -10,7 +10,21 @@ export const loginResturantController = async (req: Request): Promise<DataReturn
   try {
     const resturant = await db.Resturants.findOne({ email })
 
-    data.token = resturant?.getSignedToken()
+    if (!resturant) {
+      throw new Error('Resturant does not exist')
+    }
+
+    const isPasswordMatch = resturant.verifyPassword(password)
+
+    if (!isPasswordMatch) {
+      throw new Error('Email and Password do not match')
+    }
+    const token = resturant.getSignedToken()
+    if (!token) {
+      throw new Error('Unable to login')
+    }
+
+    data.token = token
   } catch (error) {
     errors.push(error as string)
     console.log(error)
@@ -39,6 +53,11 @@ export const registerResturantController = async (req: Request): Promise<DataRet
   const data: { token?: string } = {}
 
   try {
+    const doesEmailExists = await db.Resturants.findOne({ email })
+    if (!doesEmailExists) {
+      throw new Error('Email already in use')
+    }
+
     const resturant = await db.Resturants.create({
       name,
       email,
@@ -50,7 +69,12 @@ export const registerResturantController = async (req: Request): Promise<DataRet
       address
     })
 
-    data.token = resturant.getSignedToken()
+    const token = resturant.getSignedToken()
+
+    if (!token) {
+      throw new Error('Unable to login')
+    }
+    data.token = token
   } catch (error) {
     errors.push(error as string)
     console.log(error)
