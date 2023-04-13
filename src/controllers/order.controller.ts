@@ -1,6 +1,6 @@
-import { type Request, type DataReturnType } from '../typings'
 import db from '../database'
-import { type OrderModel } from '../typings/order.type'
+import type { Request, DataReturnType } from '../typings'
+import type { OrderModel } from '../typings/order.type'
 
 export const addOrderController = async (req: Request): Promise<DataReturnType<{ order?: OrderModel }>> => {
   const errors: string[] = []
@@ -38,8 +38,12 @@ export const addOrderController = async (req: Request): Promise<DataReturnType<{
     })
 
     data.order = order
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -61,8 +65,12 @@ export const updateOrderController = async (req: Request): Promise<DataReturnTyp
     }
 
     data.order = order
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -78,8 +86,12 @@ export const deleteOrderController = async (req: Request): Promise<DataReturnTyp
 
   try {
     await db.Orders.findByIdAndDelete(req.params.orderid)
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {

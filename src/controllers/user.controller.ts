@@ -1,5 +1,5 @@
 import db from '../database'
-import { type DataReturnType, type Request } from '../typings'
+import type { DataReturnType, Request } from '../typings'
 
 const { Users } = db
 
@@ -27,13 +27,16 @@ export const loginController = async (req: Request): Promise<DataReturnType<{ to
     }
 
     data.token = token
-  } catch (error) {
-    errors.push(error as string)
-    console.log(error)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
-    success: Object.keys(errors).length < 1,
+    success: errors.length < 1,
     errors,
     data
   }
@@ -60,12 +63,16 @@ export const registerController = async (req: Request): Promise<DataReturnType<{
 
     const token = user.getSignedToken()
     data.token = token
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
-    success: Object.keys(errors).length < 1,
+    success: errors.length < 1,
     errors,
     data
   }
@@ -82,12 +89,16 @@ export const addressController = async (req: Request): Promise<DataReturnType<an
     if (!user) {
       throw new Error('User not found')
     }
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
-    success: Object.keys(errors).length < 1,
+    success: errors.length < 1,
     errors,
     data
   }

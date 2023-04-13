@@ -1,5 +1,5 @@
 import db from '../database'
-import { type DataReturnType, type Request } from '../typings'
+import type { DataReturnType, Request } from '../typings'
 
 // Resturant Auth Funtions
 export const loginResturantController = async (req: Request): Promise<DataReturnType<any>> => {
@@ -25,9 +25,12 @@ export const loginResturantController = async (req: Request): Promise<DataReturn
     }
 
     data.token = token
-  } catch (error) {
-    errors.push(error as string)
-    console.log(error)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -75,9 +78,12 @@ export const registerResturantController = async (req: Request): Promise<DataRet
       throw new Error('Unable to login')
     }
     data.token = token
-  } catch (error) {
-    errors.push(error as string)
-    console.log(error)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -96,8 +102,12 @@ export const getResturantMenuController = async (req: Request): Promise<DataRetu
   try {
     const items = await db.MenuItems.find({ resturant: req.params.resturantid })
     data.items = items
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -136,8 +146,12 @@ export const addMenuItemController = async (req: Request): Promise<DataReturnTyp
     console.log(item)
 
     data.item = item
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -153,8 +167,12 @@ export const removeMenuItemController = async (req: Request): Promise<DataReturn
 
   try {
     await db.MenuItems.findByIdAndDelete(req.params.itemid)
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
@@ -172,8 +190,12 @@ export const updateMenuItemController = async (req: Request): Promise<DataReturn
   try {
     const item = await db.MenuItems.findByIdAndUpdate(req.params.itemid, menuitem)
     data.item = item
-  } catch (error) {
-    errors.push(error as string)
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
   }
 
   return {
