@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import { type ResturantModel } from '../typings/resturant.type'
+import type { ResturantModel } from '../typings/resturant.type'
 import { JWT_SECRET_KEY } from '../configs/constants'
 
 const resturantSchema = new mongoose.Schema<ResturantModel>({

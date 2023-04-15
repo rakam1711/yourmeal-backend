@@ -57,7 +57,7 @@ export const registerResturantController = async (req: Request): Promise<DataRet
 
   try {
     const doesEmailExists = await db.Resturants.findOne({ email })
-    if (!doesEmailExists) {
+    if (doesEmailExists) {
       throw new Error('Email already in use')
     }
 

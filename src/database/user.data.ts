@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-import { type UserModel } from '../typings/user.types'
+import type { UserModel } from '../typings/user.types'
 import { JWT_SECRET_KEY } from '../configs/constants'
 
 const userSchema = new mongoose.Schema<UserModel>({
