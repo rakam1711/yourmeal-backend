@@ -1,10 +1,11 @@
-import express, { type Response } from 'express'
+import express from 'express'
+import type { Response } from 'express'
 import {
   loginController,
   registerController,
   addressController
 } from '../controllers/user.controller'
-import { type Request } from '../typings'
+import type { Request } from '../typings'
 
 import protect from '../middlewares/protect'
 
