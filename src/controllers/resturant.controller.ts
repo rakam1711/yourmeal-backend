@@ -1,64 +1,60 @@
-import db from '../database'
-import type { DataReturnType, Request } from '../typings'
+import db from "../database";
+import type { DataReturnType, Request } from "../typings";
 
 // Resturant Auth Funtions
-export const loginResturantController = async (req: Request): Promise<DataReturnType<any>> => {
-  const { email, password } = req.body
-  const errors: string[] = []
-  const data: { token?: string } = {}
+export const loginResturantController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const { email, password } = req.body;
+  const errors: string[] = [];
+  const data: { token?: string } = {};
 
   try {
-    const resturant = await db.Resturants.findOne({ email })
+    const resturant = await db.Resturants.findOne({ email });
 
     if (!resturant) {
-      throw new Error('Resturant does not exist')
+      throw new Error("Resturant does not exist");
     }
 
-    const isPasswordMatch = resturant.verifyPassword(password)
+    const isPasswordMatch = resturant.verifyPassword(password);
 
     if (!isPasswordMatch) {
-      throw new Error('Email and Password do not match')
+      throw new Error("Email and Password do not match");
     }
-    const token = resturant.getSignedToken()
+    const token = resturant.getSignedToken();
     if (!token) {
-      throw new Error('Unable to login')
+      throw new Error("Unable to login");
     }
 
-    data.token = token
+    data.token = token;
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
-  }
-}
+    data,
+  };
+};
 
-export const registerResturantController = async (req: Request): Promise<DataReturnType<any>> => {
-  const {
-    name,
-    email,
-    password,
-    description,
-    contacts,
-    image,
-    tags,
-    address
-  } = req.body
+export const registerResturantController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const { name, email, password, description, contacts, image, tags, address } =
+    req.body;
 
-  const errors: string[] = []
-  const data: { token?: string } = {}
+  const errors: string[] = [];
+  const data: { token?: string } = {};
 
   try {
-    const doesEmailExists = await db.Resturants.findOne({ email })
+    const doesEmailExists = await db.Resturants.findOne({ email });
     if (doesEmailExists) {
-      throw new Error('Email already in use')
+      throw new Error("Email already in use");
     }
 
     const resturant = await db.Resturants.create({
@@ -69,67 +65,97 @@ export const registerResturantController = async (req: Request): Promise<DataRet
       contacts,
       image,
       tags,
-      address
-    })
+      address,
+    });
 
-    const token = resturant.getSignedToken()
+    const token = resturant.getSignedToken();
 
     if (!token) {
-      throw new Error('Unable to login')
+      throw new Error("Unable to login");
     }
-    data.token = token
+    data.token = token;
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
-  }
-}
+    data,
+  };
+};
 
 // Other Resturant Functions
 
-export const getResturantMenuController = async (req: Request): Promise<DataReturnType<any>> => {
-  const errors: string[] = []
-  const data: { items?: any[] } = {}
+export const validateResturant = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const errors: string[] = [];
+  const data: { resturant?: any } = {};
+
+  console.log("Here");
 
   try {
-    const items = await db.MenuItems.find({ resturant: req.params.resturantid })
-    data.items = items
+    const resturant = await db.Resturants.findById(req.resturant);
+
+    if (!resturant) {
+      throw new Error("Resturant does not exist");
+    }
+
+    data.resturant = resturant;
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
+    data,
+  };
+};
+
+export const getResturantMenuController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const errors: string[] = [];
+  const data: { items?: any[] } = {};
+
+  try {
+    const items = await db.MenuItems.find({
+      resturant: req.params.resturantid,
+    });
+    data.items = items;
+  } catch (error: any) {
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
+    } else {
+      errors.push(String(error));
+    }
   }
-}
 
-export const addMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
-  const {
-    name,
-    description,
-    thumbnail,
-    price,
-    quantity,
-    category,
-    tags
-  } = req.body
+  return {
+    success: errors.length < 1,
+    errors,
+    data,
+  };
+};
 
-  const errors: string[] = []
-  const data: { item?: any } = {}
+export const addMenuItemController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const { name, description, thumbnail, price, quantity, category, tags } =
+    req.body;
+
+  const errors: string[] = [];
+  const data: { item?: any } = {};
 
   try {
     const item = await db.MenuItems.create({
@@ -140,67 +166,74 @@ export const addMenuItemController = async (req: Request): Promise<DataReturnTyp
       price,
       quantity,
       category,
-      tags
-    })
+      tags,
+    });
 
-    console.log(item)
+    console.log(item);
 
-    data.item = item
+    data.item = item;
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
-  }
-}
+    data,
+  };
+};
 
-export const removeMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
-  const errors: string[] = []
-  const data = {}
+export const removeMenuItemController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const errors: string[] = [];
+  const data = {};
 
   try {
-    await db.MenuItems.findByIdAndDelete(req.params.itemid)
+    await db.MenuItems.findByIdAndDelete(req.params.itemid);
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
-  }
-}
+    data,
+  };
+};
 
-export const updateMenuItemController = async (req: Request): Promise<DataReturnType<any>> => {
-  const { menuitem } = req.body
-  const errors: string[] = []
-  const data: { item?: any } = {}
+export const updateMenuItemController = async (
+  req: Request
+): Promise<DataReturnType<any>> => {
+  const { menuitem } = req.body;
+  const errors: string[] = [];
+  const data: { item?: any } = {};
 
   try {
-    const item = await db.MenuItems.findByIdAndUpdate(req.params.itemid, menuitem)
-    data.item = item
+    const item = await db.MenuItems.findByIdAndUpdate(
+      req.params.itemid,
+      menuitem
+    );
+    data.item = item;
   } catch (error: any) {
-    if (typeof error === typeof new Error('')) {
-      errors.push(error.message)
+    if (typeof error === typeof new Error("")) {
+      errors.push(error.message);
     } else {
-      errors.push(String(error))
+      errors.push(String(error));
     }
   }
 
   return {
     success: errors.length < 1,
     errors,
-    data
-  }
-}
+    data,
+  };
+};
