@@ -3,7 +3,8 @@ import type { Response } from 'express'
 import {
   loginController,
   registerController,
-  addressController
+  addressController,
+  userValidateController
 } from '../controllers/user.controller'
 import type { Request } from '../typings'
 
@@ -23,6 +24,11 @@ userRouter.post('/register', async (req: Request, res: Response) => {
 })
 
 // User features routes
+userRouter.get('/validate', protect, async (req: Request, res: Response) => {
+  const response = await userValidateController(req)
+  res.json(response)
+})
+
 userRouter.post('/address', protect, async (req: Request, res: Response) => {
   const response = await addressController(req)
   res.json(response).status(200)

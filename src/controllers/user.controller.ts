@@ -11,7 +11,7 @@ export const loginController = async (req: Request): Promise<DataReturnType<{ to
   const data: { token?: string } = {}
 
   try {
-    const user = await Users.findOne({ email })
+    const user = await Users.findOne({ email }).select('+password')
     if (!user) {
       throw new Error('User not found')
     }
@@ -79,6 +79,33 @@ export const registerController = async (req: Request): Promise<DataReturnType<{
 }
 
 // Other functions
+export const userValidateController = async (req: Request): Promise<DataReturnType<any>> => {
+  const errors: string[] = []
+  const data: { user?: any } = {}
+
+  try {
+    const user = await db.Users.findById(req.user)
+
+    if (!user) {
+      throw new Error('User does not exist')
+    }
+
+    data.user = user
+  } catch (error: any) {
+    if (typeof error === typeof new Error('')) {
+      errors.push(error.message)
+    } else {
+      errors.push(String(error))
+    }
+  }
+
+  return {
+    success: errors.length < 1,
+    errors,
+    data
+  }
+}
+
 export const addressController = async (req: Request): Promise<DataReturnType<any>> => {
   const { address } = req.body
   const errors: string[] = []

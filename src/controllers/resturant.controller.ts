@@ -11,7 +11,7 @@ export const loginResturantController = async (
   const data: { token?: string } = {}
 
   try {
-    const resturant = await db.Resturants.findOne({ email })
+    const resturant = await db.Resturants.findOne({ email }).select('+password')
 
     if (!resturant) {
       throw new Error('Resturant does not exist')
@@ -98,8 +98,6 @@ export const validateResturant = async (
 ): Promise<DataReturnType<any>> => {
   const errors: string[] = []
   const data: { resturant?: any } = {}
-
-  console.log('Here')
 
   try {
     const resturant = await db.Resturants.findById(req.resturant)
