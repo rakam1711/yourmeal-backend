@@ -6,7 +6,6 @@ export const loginResturantController = async (
   req: Request
 ): Promise<DataReturnType<any>> => {
   const { email, password } = req.body
-  console.log(req.body)
   const errors: string[] = []
   const data: { token?: string } = {}
 
@@ -168,8 +167,6 @@ export const addMenuItemController = async (
       category,
       tags
     })
-
-    console.log(item)
 
     data.item = item
   } catch (error: any) {
